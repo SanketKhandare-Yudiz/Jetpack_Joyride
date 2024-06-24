@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class Bike : PlayerAbility
+public class ProfitBird : PlayerActions
 {
-    private float jumpSpeed = 7f;
-    private float moveSpeed = 12f;
+    private float movespeed = 15f;
+    private float jumspeed =10f;
     private Rigidbody2D player;
-
-    private void Start()
+    void Start()
     {
         player = GetComponent<Rigidbody2D>();
+        Debug.Log("Player name:"+player.gameObject.name);
     }
+
     void Update()
     {
         movment();
         ClampPlayer();
-    
         if (Input.GetMouseButtonDown(0))
         {
             Jump();
@@ -23,11 +23,11 @@ public class Bike : PlayerAbility
 
     public override void Jump()
     {
-        player.velocity = new Vector2(player.velocity.x, jumpSpeed);
-        Debug.Log("jump with Bike");
+        player.velocity = new Vector2(player.velocity.x, jumspeed);
     }
+
     public override void movment()
     {
-        player.velocity = new Vector2(moveSpeed,player.velocity.y);
+        player.velocity = new Vector2(movespeed, player.velocity.y);
     }
 }

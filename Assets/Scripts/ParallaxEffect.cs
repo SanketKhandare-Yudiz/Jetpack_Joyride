@@ -13,13 +13,12 @@ namespace _Scripts
 
         private void Start()
         {
+            Application.targetFrameRate = 60;
             //Getting the starting X position of sprite.
             _startingPos = transform.position.x;
             //Getting the length of the sprites.
             _lengthOfSprite = GetComponent<SpriteRenderer>().bounds.size.x;
         }
-
-
 
         private void FixedUpdate()
         {

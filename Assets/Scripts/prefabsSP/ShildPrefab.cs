@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class ShildPrefab : MonoBehaviour
 {
-    public delegate void AddScript();
-    public static AddScript addScript;
+    public delegate void AddShildScript();
+    public static AddShildScript addShildScript;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Player player = collision.transform.gameObject.GetComponent<Player>();
-        if(player != null)
+        if (player != null)
         {
             Destroy(gameObject);
-            addScript?.Invoke();
+            Debug.Log("Collided");
+            addShildScript?.Invoke();
         }
     }
 }

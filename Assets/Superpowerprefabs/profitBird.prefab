@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5660336250570965260}
   - component: {fileID: 8520148626654096561}
   - component: {fileID: 3965775400507047848}
+  - component: {fileID: 7674158833546590555}
   m_Layer: 0
   m_Name: profitBird
   m_TagString: Untagged
@@ -120,3 +121,15 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.93
+--- !u!114 &7674158833546590555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8440023199510019355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83bd30b87e19f4985ae23daa60badbad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

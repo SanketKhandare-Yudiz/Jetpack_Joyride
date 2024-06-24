@@ -6,7 +6,6 @@ public class AnimationController : MonoBehaviour
 {
     public static AnimationController instance;
     public Animator animator;
-    public Player player;
 
     private void Start()
     {
@@ -31,6 +30,5 @@ public class AnimationController : MonoBehaviour
     public void DeadAnimation()
     {
         animator.SetTrigger("Dead");
-        player.enabled = false;
     }
 }

@@ -4,10 +4,10 @@ using UnityEngine;
 public class SpecialPowerSpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> superPowersPrefab;
-    [SerializeField] private float specialPowerDistance = 10f;
-    [SerializeField] private float initialSPPosition = 10f;
+    private float specialPowerDistance;
+    private float initialSPPosition = 200f;
 
-    public Player player;
+    public Transform player;
 
     private List<GameObject> SpecialPower = new List<GameObject>();
     private float nextSPPosition;
@@ -25,7 +25,7 @@ public class SpecialPowerSpawner : MonoBehaviour
     {
         if (player.transform.position.x > SpecialPower[1].transform.position.x)
         {
-            RemoveObstacle();
+            RemoveSpecialPower();
             SpwanSuperPower();
         }
     }
@@ -33,13 +33,15 @@ public class SpecialPowerSpawner : MonoBehaviour
     {
         int randomIndex = Random.Range(0, superPowersPrefab.Count);
         GameObject randomPrefab = superPowersPrefab[randomIndex];
-        Vector3 spawnPosition = new Vector3(nextSPPosition, transform.position.y, transform.position.z);
+        float yoffset = Random.Range(0,3);
+        Vector3 spawnPosition = new Vector3(nextSPPosition, transform.position.y + yoffset, transform.position.z);
         GameObject newObstacle = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
         SpecialPower.Add(newObstacle);
+        specialPowerDistance = Random.Range(100,110);
         nextSPPosition += specialPowerDistance;
     }
 
-    void RemoveObstacle()
+    void RemoveSpecialPower()
     {
         GameObject specialpower = SpecialPower[0];
         SpecialPower.RemoveAt(0);
