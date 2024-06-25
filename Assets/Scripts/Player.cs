@@ -10,6 +10,8 @@ public class Player : PlayerActions
     private float jetpackHoldTime = 0f;
     private float decreaseSpeed = 2f;
 
+    public ParticleSystem jetPackflame;
+
     void Update()
     {
         movment();
@@ -19,11 +21,12 @@ public class Player : PlayerActions
         {
             isJetpackActive = true;
             jetpackHoldTime += Time.deltaTime;
+            jetPackflame.Play();
         }
         else
         {
-            //isJetpackActive = false;
-            //jetpackHoldTime = 0f;
+            isJetpackActive = false;
+            jetpackHoldTime = 1.5f;
 
             isJetpackActive = false;
             if (jetpackHoldTime > 0)
@@ -34,6 +37,7 @@ public class Player : PlayerActions
                     jetpackHoldTime = 0f;
                 }
             }
+            jetPackflame.Stop();
         }
     }
 
@@ -47,18 +51,25 @@ public class Player : PlayerActions
 
     public override void Jump()
     {
-        float scaledThrustforce = Mathf.Lerp(thrustforce, maxThrustforce, jetpackHoldTime);
-        //player.velocity = new Vector2(player.velocity.x, scaledThrustforce);
-
-        player.AddForce(Vector2.up * scaledThrustforce,ForceMode2D.Force);
-        Debug.Log("Scaled Force Value :" + scaledThrustforce);
+        float increaseforce = Mathf.Lerp(thrustforce, maxThrustforce, jetpackHoldTime);
+        player.AddForce(Vector2.up * increaseforce,ForceMode2D.Force);
+        Debug.Log("Force Value :" + increaseforce);
         AnimationController.instance.jumpAnimation();
     }
 
     public override void movment()
     {
-        //player.velocity = new Vector2(moveSpeed, player.velocity.y);
-        player.AddForce(Vector2.right * moveSpeed,ForceMode2D.Force);
+        player.velocity = new Vector2(moveSpeed, player.velocity.y);
+      
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            AnimationController.instance.RunAnimation();
+            Debug.Log("OnGround");
+        }
     }
 }
 

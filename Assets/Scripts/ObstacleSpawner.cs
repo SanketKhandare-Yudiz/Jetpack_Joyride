@@ -70,7 +70,6 @@ public class ObstacleSpawner : MonoBehaviour
         float yoffset = Random.Range(3, -3);
         Vector3 spawnPosition = new Vector3(nextObstaclePosition, transform.position.y + yoffset, transform.position.z);
         GameObject newObstacle = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
-        newObstacle.transform.Translate(Vector2.left * 5f, Space.World);
         zapperlist.Add(newObstacle);
         float obstacleDistance = Random.Range(15, 25);
         nextObstaclePosition += obstacleDistance;

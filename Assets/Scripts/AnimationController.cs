@@ -31,4 +31,9 @@ public class AnimationController : MonoBehaviour
     {
         animator.SetTrigger("Dead");
     }
+
+    public void RunAnimation()
+    {
+        animator.SetTrigger("run");
+    }
 }
