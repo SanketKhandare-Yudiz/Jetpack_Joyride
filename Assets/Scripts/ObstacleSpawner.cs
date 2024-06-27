@@ -7,8 +7,8 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private GameObject missilePrefab;
     [SerializeField] private GameObject laserPrefab;
 
-    private float initialZapperPosition = 30f;
-    private float initialMissilePosition = 300f;
+    private float initialZapperPosition = 100f;
+    private float initialMissilePosition = 400f;
     private float initiallaserPosition = 600f;
 
     public Transform player; 
@@ -17,15 +17,15 @@ public class ObstacleSpawner : MonoBehaviour
     private List<GameObject> missileList = new List<GameObject>();
     private List<GameObject> laserlist = new List<GameObject>();
 
-    private float nextObstaclePosition;
+    private float nextZapperPosition;
     private float nextMissilePosition;
     private float nextLaserPosition;
 
-    bool instatiate = false;
+    bool instantiate = false;
 
     void Start()
     {
-        nextObstaclePosition = initialZapperPosition;
+        nextZapperPosition = initialZapperPosition;
         nextMissilePosition = initialMissilePosition;
         nextLaserPosition = initiallaserPosition;
 
@@ -33,6 +33,7 @@ public class ObstacleSpawner : MonoBehaviour
         {
             SpawnZapper();
         }
+
         SpawnMissile();
     }
 
@@ -40,25 +41,32 @@ public class ObstacleSpawner : MonoBehaviour
     {
         if (player.transform.position.x > zapperlist[2].transform.position.x)
         {
-            RemoveZapper();
+            GameObject zapper = zapperlist[0];
+            zapperlist.RemoveAt(0);
+            Destroy(zapper);
             SpawnZapper();
             Debug.Log("Spown Zapper");
+           // RecycleObstacle(zapperlist, nextZapperPosition, SpawnZapper);
         }
 
-        if (player.transform.position.x > missileList[0].transform.position.x && !instatiate)
+        if (player.transform.position.x > missileList[0].transform.position.x && !instantiate)
         {
             GameObject missile = missileList[0];
             missileList.RemoveAt(0);
             Destroy(missile);
             SpawnMissile();
-            instatiate = true;
+            instantiate = true;
+            //RecycleObstacle(missileList, nextMissilePosition, SpawnMissile);
         }
 
-        if (player.transform.position.x > 600f && !instatiate)
+        if (player.transform.position.x > 600f && !instantiate)
         {
+            GameObject laser = laserlist[0];
+            missileList.RemoveAt(0);
+            Destroy(laser);
             SpawnLaser();
-            instatiate = true;
-            Debug.Log("LaserSpown");
+            instantiate = true;
+            //RecycleObstacle(laserlist, nextLaserPosition, SpawnLaser);
         }
     }
 
@@ -68,30 +76,29 @@ public class ObstacleSpawner : MonoBehaviour
         Debug.Log("randomprefabindex:" + randomIndex);
         GameObject randomPrefab = ZapperPrefabs[randomIndex];
         float yoffset = Random.Range(3, -3);
-        Vector3 spawnPosition = new Vector3(nextObstaclePosition, transform.position.y + yoffset, transform.position.z);
+        Vector3 spawnPosition = new Vector3(nextZapperPosition, transform.position.y + yoffset, transform.position.z);
         GameObject newObstacle = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
         zapperlist.Add(newObstacle);
-        float obstacleDistance = Random.Range(15, 25);
-        nextObstaclePosition += obstacleDistance;
+        float obstacleDistance = Random.Range(100, 200);
+        nextZapperPosition += obstacleDistance;
     }
 
-    void RemoveZapper()
-    {
-        GameObject zapper = zapperlist[0];
-        zapperlist.RemoveAt(0);
-        Destroy(zapper);
-    }
-    
     void SpawnMissile()
     {
         float yoffset = Random.Range(4, -3);
         Vector3 spownPosition = new Vector3(nextMissilePosition, transform.position.y + yoffset, transform.position.z);
         Quaternion rotation = Quaternion.Euler(0, 0, 90);
         GameObject newMissile = Instantiate(missilePrefab, spownPosition, rotation);
+
+        Missile missile = newMissile.GetComponent<Missile>();
+        if (missile != null)
+        {
+            missile.SetPlayerTransform(player);
+        }
         missileList.Add(newMissile);
         float newDistance = Random.Range(100, 200);
         nextMissilePosition += newDistance;
-        instatiate = false;
+        instantiate = false;
     }
 
     void SpawnLaser()
@@ -99,20 +106,23 @@ public class ObstacleSpawner : MonoBehaviour
         float yOffset = Random.Range(4, -3);
         Vector3 spownPosition = new Vector3(nextLaserPosition, transform.position.y + yOffset, transform.position.z);
         GameObject newlaser = Instantiate(laserPrefab, spownPosition, Quaternion.identity);
+
+        Laser laser = newlaser.GetComponent<Laser>();
+        if(laser != null)
+        {
+
+        }
+
         laserlist.Add(newlaser);
         float newDistance = Random.Range(300, 400);
         nextLaserPosition += newDistance;
-        instatiate = false;
+        instantiate = false;
+    }
+    void RecycleObstacle(List<GameObject> obstacleList, float nextPosition, System.Action spawnMethod)
+    {
+        GameObject obstacle = obstacleList[0];
+        obstacleList.RemoveAt(0);
+        Destroy(obstacle);
+        spawnMethod.Invoke();
     }
 }
-//void CleanupMissiles()
-//{
-//    for (int i = missileList.Count - 1; i >= 0; i--)
-//    {
-//        if (missileList[i].transform.position.x < player.transform.position.x - 10f)
-//        {
-//            Destroy(missileList[i]);
-//            missileList.RemoveAt(i);
-//        }
-//    }
-//}

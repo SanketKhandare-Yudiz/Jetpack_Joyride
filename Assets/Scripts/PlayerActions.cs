@@ -13,10 +13,14 @@ public class PlayerActions : MonoBehaviour
         if (transform.position.y > maxY)
         {
             transform.position = new Vector3(transform.position.x, maxY, transform.position.z);
-        
+
             if (transform.GetComponent<Rigidbody2D>().velocity.y > 0)
             {
-                transform.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.GetComponent<Rigidbody2D>().velocity.x, 0);
+                float force = Mathf.Lerp(0f, 10f, Time.deltaTime);
+                transform.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.GetComponent<Rigidbody2D>().velocity.x, force);
+                Debug.Log("Speed: " + force);
+                transform.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
+
             }
         }
     }

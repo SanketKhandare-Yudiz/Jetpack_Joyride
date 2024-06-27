@@ -1,30 +1,38 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Missile : Obstacle
+public class Missile : MonoBehaviour
 {
-    private float speed = 15f;
+    private float moveSpeed = 15f;
+    private float trackDistance = 50f;
+    private Transform playerTransform;
 
-    private void Start()
+    public void SetPlayerTransform(Transform player)
     {
-        player = GetComponent<Transform>();
+        playerTransform = player;
     }
 
     private void Update()
     {
-        TrackPlayer();
+        if(playerTransform.position.x > trackDistance)
+        {
+            MoveTowardsPlayer();
+        }
     }
 
-    void TrackPlayer()
-    { 
-        StartCoroutine(LaunchMissile());
-    }
-
-    IEnumerator LaunchMissile()
+    private void MoveTowardsPlayer()
     {
-        yield return new WaitForSeconds(2f);
-        transform.Translate(Vector2.left * speed * Time.deltaTime, Space.World);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerTransform.position - transform.position, trackDistance);
+        Debug.Log("Hit to the player");
+
+        if (hit.collider != null)
+        {
+            Vector2 playerPos = playerTransform.position;
+            Vector2 missilePos = new Vector2(transform.position.x, transform.position.y);
+            Vector2 direction = playerPos - missilePos;
+            //direction = direction.normalized;
+            transform.position = Vector2.MoveTowards(missilePos, playerPos, moveSpeed * Time.deltaTime);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -32,7 +40,7 @@ public class Missile : Obstacle
         Player player = collision.transform.GetComponent<Player>();
         if (player != null)
         {
-            Debug.Log("GameOver");
+            Debug.Log("Game Over");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }

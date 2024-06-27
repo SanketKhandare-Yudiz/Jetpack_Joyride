@@ -2,73 +2,64 @@ using UnityEngine;
 
 public class Player : PlayerActions
 {
-    public Rigidbody2D player;
-    public float thrustforce;
-    public float maxThrustforce;
-    public float moveSpeed;
-    private bool isJetpackActive = false;
+    [SerializeField] private Rigidbody2D player;
+    [SerializeField] private float minThrustforce;
+    [SerializeField] private float maxThrustforce;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private ParticleSystem jetPackflame;
+    //private bool JetpackActive = false;
     private float jetpackHoldTime = 0f;
-    private float decreaseSpeed = 2f;
+    public float fallSpeed ;
 
-    public ParticleSystem jetPackflame;
 
-    void Update()
+    void FixedUpdate()
     {
         movment();
         ClampPlayer();
-
         if (Input.GetMouseButton(0))
         {
-            isJetpackActive = true;
-            jetpackHoldTime += Time.deltaTime;
+            player.gravityScale = 1.5f;
+            //JetpackActive = true;
+            Jump();
+            jetpackHoldTime += Time.deltaTime * 1.5f;
             jetPackflame.Play();
         }
         else
         {
-            isJetpackActive = false;
-            jetpackHoldTime = 1.5f;
-
-            isJetpackActive = false;
-            if (jetpackHoldTime > 0)
+            //JetpackActive = false;
+            Fall();
+            jetpackHoldTime -= Time.deltaTime;
+            if (jetpackHoldTime < 0)
             {
-                jetpackHoldTime -= Time.deltaTime * decreaseSpeed;
-                if (jetpackHoldTime < 0)
-                {
-                    jetpackHoldTime = 0f;
-                }
+                jetpackHoldTime = 0f;
             }
-            jetPackflame.Stop();
-        }
-    }
 
-    private void FixedUpdate()
-    {
-        if (isJetpackActive)
-        {
-            Jump();
+            jetPackflame.Stop();
         }
     }
 
     public override void Jump()
     {
-        float increaseforce = Mathf.Lerp(thrustforce, maxThrustforce, jetpackHoldTime);
+        float increaseforce = Mathf.Lerp(minThrustforce, maxThrustforce, jetpackHoldTime - Time.deltaTime);
         player.AddForce(Vector2.up * increaseforce,ForceMode2D.Force);
-        Debug.Log("Force Value :" + increaseforce);
         AnimationController.instance.jumpAnimation();
     }
 
     public override void movment()
     {
         player.velocity = new Vector2(moveSpeed, player.velocity.y);
-      
     }
 
+    public void Fall()
+    {
+        float decreaseforce = Mathf.Lerp(0f, fallSpeed, jetpackHoldTime);
+        player.AddForce(Vector2.down * decreaseforce, ForceMode2D.Force);
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
             AnimationController.instance.RunAnimation();
-            Debug.Log("OnGround");
         }
     }
 }
