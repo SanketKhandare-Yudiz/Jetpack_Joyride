@@ -773,6 +773,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 244d2101618a246a6a905641ea93a600, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ZapperPrefabs: []
+  missilePrefab: {fileID: 0}
+  SpecialPowersPrefabs: []
   coinPrefab:
   - {fileID: 3451103492806863449, guid: 0e8132e5a6f2a4a43ae399b83b786e72, type: 3}
   - {fileID: 6537805450719167344, guid: 209218c1405294302a98fab7900b0c3a, type: 3}
@@ -993,10 +996,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44cc3be31e59b488fa03943f190f431d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  superPowersPrefab:
-  - {fileID: 2021176015600780724, guid: b35c8b08b224b4dd2bfedf61145719e3, type: 3}
-  - {fileID: 8515965036741065883, guid: b0a38660920b145d9be2f0b295377774, type: 3}
-  - {fileID: 8440023199510019355, guid: 1673d7370ca1e467381d6b0ef963d037, type: 3}
+  ZapperPrefabs: []
+  missilePrefab: {fileID: 0}
+  SpecialPowersPrefabs: []
+  coinPrefab: []
   player: {fileID: 1894383562}
 --- !u!4 &1082996502
 Transform:
@@ -7596,9 +7599,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ZapperPrefabs:
-  - {fileID: 1888483284572256387, guid: 2c0049c1927de4aceacdf6f7a826192e, type: 3}
-  - {fileID: 608071335492035583, guid: 9662993587ea14c9fa41215dfd0c1aee, type: 3}
-  - {fileID: 2706946591615957548, guid: 168f09e7b906f4474a44f6c361740861, type: 3}
+  - {fileID: 2799886413251638780, guid: a4aa3a2ade7944546a22d6107b2c9396, type: 3}
+  - {fileID: 2799886413251638780, guid: dde43cfb4b7b04d0a816534223ce22e5, type: 3}
+  - {fileID: 522331615353878760, guid: e8d4ed34d24a9451982082e5a98d0387, type: 3}
   missilePrefab: {fileID: 7983087514396594640, guid: befc2650e5230404ea617e9c5d74c2a7, type: 3}
   laserPrefab: {fileID: 6684606996309358528, guid: 3905a81e1ef6644908cfa666f35f194e, type: 3}
   player: {fileID: 1894383562}

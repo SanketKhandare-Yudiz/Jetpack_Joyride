@@ -19,7 +19,7 @@ public class PlayerActions : MonoBehaviour
                 float force = Mathf.Lerp(0f, 10f, Time.deltaTime);
                 transform.GetComponent<Rigidbody2D>().velocity = new Vector2(transform.GetComponent<Rigidbody2D>().velocity.x, force);
                 Debug.Log("Speed: " + force);
-                transform.GetComponent<Rigidbody2D>().gravityScale = 0.5f;
+                transform.GetComponent<Rigidbody2D>().gravityScale = 0.8f;
 
             }
         }
@@ -31,4 +31,4 @@ public class PlayerActions : MonoBehaviour
 //    float clampedY = Mathf.Clamp(transform.position.y, float.MinValue, maxY);
 //    transform.position = new Vector3(transform.position.x, clampedY, transform.position.z);
 //    transform.GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
-//}
+//0.8
