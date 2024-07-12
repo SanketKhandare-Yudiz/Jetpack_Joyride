@@ -1,11 +1,15 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Missile : MonoBehaviour
+public class Missile : ObstacleSpawner
 {
     private float moveSpeed = 15f;
-    private float trackDistance = 50f;
+    private float trackDistance = 250f;
     private Transform playerTransform;
+    private Vector2 playerPos;
+    private Vector2 missilePos;
+    float lanchPoint = 260f;
+    Vector2 pos;
 
     public void SetPlayerTransform(Transform player)
     {
@@ -14,26 +18,40 @@ public class Missile : MonoBehaviour
 
     private void Update()
     {
-        if(playerTransform.position.x > trackDistance)
+        if (playerTransform.position.x > trackDistance)
         {
-            MoveTowardsPlayer();
+            LaunchMissile();
         }
     }
 
-    private void MoveTowardsPlayer()
+    private void TrackPlayer()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerTransform.position - transform.position, trackDistance);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerTransform.position - transform.position, 50f);
         Debug.Log("Hit to the player");
 
         if (hit.collider != null)
         {
-            Vector2 playerPos = playerTransform.position;
-            Vector2 missilePos = new Vector2(transform.position.x, transform.position.y);
-            Vector2 direction = playerPos - missilePos;
-            //direction = direction.normalized;
-            transform.position = Vector2.MoveTowards(missilePos, playerPos, moveSpeed * Time.deltaTime);
+            playerPos = playerTransform.position;
+            missilePos = new Vector2(transform.position.x, transform.position.y);
+            Debug.Log("missilePos :- " + missilePos);
         }
     }
+    
+    private void LaunchMissile()
+    {
+        //if (playerTransform.position.x > 270f)
+        //{
+        //    TrackPlayer();
+        //    pos = playerTransform.position;
+        //    Debug.Log("inside the block");
+        //}
+        TrackPlayer();
+        if(playerPos != Vector2.zero)
+        {
+            transform.position = Vector2.MoveTowards(missilePos, pos, moveSpeed * Time.deltaTime);
+        }
+    }
+      
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
