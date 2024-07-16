@@ -5,10 +5,11 @@ public class ObstacleSpawner : MonoBehaviour
 {
     [SerializeField] private List<GameObject> ZapperPrefabs;
     [SerializeField] private GameObject missilePrefab;
+    [SerializeField] private GameObject missileIndicator;
     [SerializeField] private GameObject laserPrefab;
-
+    
     private float initialZapperPosition = 30f;
-    private float initialMissilePosition = 300f;
+    private float initialMissilePosition = 200f;
 
     public Transform player;
 
@@ -20,6 +21,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     private bool missileSpawned = false;
 
+    public Camera mainCamera;
+
+
     void Start()
     {
         nextZapperPosition = initialZapperPosition;
@@ -28,7 +32,7 @@ public class ObstacleSpawner : MonoBehaviour
         {
             SpawnZapper();
         }
-       // SpawnMissile();
+        SpawnMissile();
     }
 
     void Update()
@@ -39,14 +43,71 @@ public class ObstacleSpawner : MonoBehaviour
             SpawnZapper();
             Debug.Log("Spawn Zapper");
         }
-        if(player.transform.position.x > 350f && !missileSpawned)
+        if (player.transform.position.x > missileList[0].transform.position.x + 10f && missileList[0])
         {
             RemoveMissile();
             SpawnMissile();
             Debug.Log("missile Spawned");
             missileSpawned = true;
         }
+        DisplayMissileIndicator();
     }
+
+    //private void DisplayMissileIndicator()
+    //{
+    //    float distanceToPlayer = Vector2.Distance(player.transform.position, transform.position);
+    //    if (distanceToPlayer <= 100f && distanceToPlayer > 15f)
+    //    {
+    //        Debug.Log("Indicator On");
+    //        missileIndicator.SetActive(true);
+    //        float targetY = transform.position.y;
+    //        float newY = Mathf.Lerp(missileIndicator.transform.position.y, targetY, Time.deltaTime * 20f);
+    //        missileIndicator.transform.position = new Vector2(missileIndicator.transform.position.x, newY);
+    //    }
+    //    else if (distanceToPlayer <= 15f)
+    //    {
+    //        Debug.Log("Indicator Off");
+    //        missileIndicator.SetActive(false);
+    //    }
+    //}
+
+    private void DisplayMissileIndicator()
+    {
+        float distanceToPlayer = Vector2.Distance(player.transform.position, missilePrefab.transform.position);
+        Vector3 missileViewportPosition = mainCamera.WorldToViewportPoint(missilePrefab.transform.position);
+        bool isMissileOnScreen = missileViewportPosition.x >= 0 && missileViewportPosition.x <= 1 && missileViewportPosition.y >= 0 && missileViewportPosition.y <= 1;
+
+        if (distanceToPlayer <= 100f && distanceToPlayer > 15f)
+        {
+            Debug.Log("Indicator On");
+            missileIndicator.SetActive(true);
+
+            if (!isMissileOnScreen)
+            {
+                // Clamp the viewport position to the left edge
+                missileViewportPosition.x = 0f;
+                missileViewportPosition.y = Mathf.Clamp01(missileViewportPosition.y);
+
+                // Convert back to world position
+                Vector3 clampedWorldPosition = mainCamera.ViewportToWorldPoint(missileViewportPosition);
+
+                // Update indicator position to the left edge
+                missileIndicator.transform.position = new Vector3(clampedWorldPosition.x, clampedWorldPosition.y, missileIndicator.transform.position.z);
+            }
+            else
+            {
+                float targetY = missileIndicator.transform.position.y;
+                float newY = Mathf.Lerp(missileIndicator.transform.position.y, targetY, Time.deltaTime * 20f);
+                missileIndicator.transform.position = new Vector2(missileIndicator.transform.position.x, newY);
+            }
+        }
+        else if (distanceToPlayer <= 15f)
+        {
+            Debug.Log("Indicator Off");
+            missileIndicator.SetActive(false);
+        }
+    }
+
 
     void SpawnZapper()
     {
@@ -60,7 +121,7 @@ public class ObstacleSpawner : MonoBehaviour
         Transform childTransform = randomPrefab.transform.GetChild(0);
         float childPos = childTransform.localPosition.x;
         //int myInt = (int)childPos;
-        Debug.Log("child Pos : :" + childPos);
+        Debug.Log("child Pos :" + childPos);
 
         float obstacleDistance = Random.Range(childPos +10f , childPos + 13f);
         nextZapperPosition += obstacleDistance;
@@ -74,18 +135,10 @@ public class ObstacleSpawner : MonoBehaviour
         Destroy(zapper);
     }
 
-    private void RemoveMissile()
-    {
-        GameObject missile = missileList[0];
-        missileList.RemoveAt(0);
-        Destroy(missile);
-
-    }
-
     void SpawnMissile()
     {
-        float yoffset = Random.Range(4, -3);
-        Vector3 spownPosition = new Vector3(nextMissilePosition, transform.position.y + yoffset, transform.position.z);
+        //float yoffset = Random.Range(4, -3);
+        Vector3 spownPosition = new Vector3(nextMissilePosition, transform.position.y, transform.position.z);
         Quaternion rotation = Quaternion.Euler(0, 0, 90);
         GameObject newMissile = Instantiate(missilePrefab, spownPosition, rotation);
 
@@ -93,10 +146,20 @@ public class ObstacleSpawner : MonoBehaviour
         if (missile != null)
         {
             missile.SetPlayerTransform(player);
+            missile.SetMissileIndicatorTransform(missileIndicator);
         }
         missileList.Add(newMissile);
         float newDistance = Random.Range(100, 150);
         nextMissilePosition += newDistance;
+    }
+
+    private void RemoveMissile()
+    {
+        GameObject missile = missileList[0];
+        missileList.RemoveAt(0);
+        Debug.Log("Destroy");
+        Destroy(missile);
+
     }
 }
 

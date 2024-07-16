@@ -7,7 +7,6 @@ public class SpawnManager : MonoBehaviour
     public GameObject missilePrefab;
     public List<GameObject> SpecialPowersPrefabs;
     public List<GameObject> coinPrefab;
-
     public Transform player;
 
 }

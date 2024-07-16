@@ -51,14 +51,14 @@ public class Player : PlayerActions
     public override void Jump()
     {
         float increaseforce = Mathf.Lerp(minThrustforce, maxThrustforce, jetpackHoldTime);
-        player.gravityScale = 1.5f;
+        player.gravityScale = 1.8f;
         player.AddForce(Vector2.up * increaseforce, ForceMode2D.Force);
         AnimationController.instance.jumpAnimation();
     }
 
     public override void movment()
     {
-        int distance = Mathf.FloorToInt(player.transform.position.x / 150f);
+        int distance = Mathf.FloorToInt(player.transform.position.x / 150f); //for increase speed 
         float additionalSpeed = distance * 1.5f;
         float currentMoveSpeed = moveSpeed + additionalSpeed;
         Debug.Log("Current Move Speed: " + currentMoveSpeed);

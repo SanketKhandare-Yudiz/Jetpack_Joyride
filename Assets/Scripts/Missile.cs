@@ -3,27 +3,20 @@ using UnityEngine.SceneManagement;
 
 public class Missile : ObstacleSpawner
 {
-    private float moveSpeed = 15f;
-    private float trackDistance = 250f;
+    private float missileSpeed = 25f;
+    private float trackDistance = 100f;
+    private float launchDistance = 20f;
     private Transform playerTransform;
+    private GameObject missileIndicatorGameObject;
     private Vector2 playerPos;
     private Vector2 missilePos;
-    float lanchPoint = 260f;
-    Vector2 pos;
-
-    public void SetPlayerTransform(Transform player)
-    {
-        playerTransform = player;
-    }
+    Vector2 targetPos;
 
     private void Update()
     {
-        if (playerTransform.position.x > trackDistance)
-        {
-            LaunchMissile();
-        }
+        LaunchMissile();
+       // DisplayMissileIndicator();
     }
-
     private void TrackPlayer()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, playerTransform.position - transform.position, 50f);
@@ -34,24 +27,45 @@ public class Missile : ObstacleSpawner
             playerPos = playerTransform.position;
             missilePos = new Vector2(transform.position.x, transform.position.y);
             Debug.Log("missilePos :- " + missilePos);
+            transform.position = Vector2.MoveTowards(missilePos, playerPos, missileSpeed * Time.deltaTime);
+            //DisplayMissileIndicator();
         }
     }
-    
+    private void DisplayMissileIndicator()
+    {
+        float distanceToPlayer = Vector2.Distance(playerTransform.position, transform.position);
+        if (distanceToPlayer <= trackDistance && distanceToPlayer > 15f)
+        {
+            Debug.Log("Indicator On");
+            missileIndicatorGameObject.SetActive(true);
+            float targetY = transform.position.y;
+            float newY = Mathf.Lerp(missileIndicatorGameObject.transform.position.y, targetY, Time.deltaTime * 20f);
+            missileIndicatorGameObject.transform.position = new Vector2(missileIndicatorGameObject.transform.position.x, newY);
+        }
+        else if (distanceToPlayer <= 15f)
+        {
+            Debug.Log("Indicator Off");
+            missileIndicatorGameObject.SetActive(false);
+        }
+    }
+
     private void LaunchMissile()
     {
-        //if (playerTransform.position.x > 270f)
-        //{
-        //    TrackPlayer();
-        //    pos = playerTransform.position;
-        //    Debug.Log("inside the block");
-        //}
-        TrackPlayer();
-        if(playerPos != Vector2.zero)
+        if (Vector2.Distance(playerTransform.position, transform.position) <= trackDistance)
         {
-            transform.position = Vector2.MoveTowards(missilePos, pos, moveSpeed * Time.deltaTime);
+            TrackPlayer();
+            if(Vector2.Distance(playerTransform.position, transform.position) == 20f)
+            {
+                targetPos = playerTransform.position;
+            }
+            Debug.Log("targetPos:" + targetPos);
         }
+        if (Vector2.Distance(playerTransform.position, transform.position) <= launchDistance)
+        {
+            transform.position = Vector2.MoveTowards(missilePos, targetPos, missileSpeed * Time.deltaTime);
+        }
+         //DisplayMissileIndicator();
     }
-      
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -62,4 +76,16 @@ public class Missile : ObstacleSpawner
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
+
+    public void SetPlayerTransform(Transform player)
+    {
+        playerTransform = player;
+    }
+    public void SetMissileIndicatorTransform(GameObject missileIndicator)
+    {
+        missileIndicatorGameObject = missileIndicator;
+    }
 }
+
+
+
