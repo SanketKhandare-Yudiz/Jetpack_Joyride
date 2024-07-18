@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class coin : MonoBehaviour
+public class Coin : MonoBehaviour
 {
     private int coinCount;
     private void OnTriggerEnter2D(Collider2D collision)

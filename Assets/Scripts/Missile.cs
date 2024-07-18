@@ -10,12 +10,17 @@ public class Missile : ObstacleSpawner
     private GameObject missileIndicatorGameObject;
     private Vector2 playerPos;
     private Vector2 missilePos;
+    private Camera camera;
     Vector2 targetPos;
 
     private void Update()
     {
         LaunchMissile();
-       // DisplayMissileIndicator();
+    }
+
+    private void FixedUpdate()
+    {
+        DisplayMissileIndicator();
     }
     private void TrackPlayer()
     {
@@ -31,16 +36,23 @@ public class Missile : ObstacleSpawner
             //DisplayMissileIndicator();
         }
     }
-    private void DisplayMissileIndicator()
+   
+    public void DisplayMissileIndicator()
     {
         float distanceToPlayer = Vector2.Distance(playerTransform.position, transform.position);
+        Vector2 missileViewportPosition = camera.WorldToViewportPoint(transform.position);
+        Debug.Log("viewpointPosition :-" + missileViewportPosition);
+
         if (distanceToPlayer <= trackDistance && distanceToPlayer > 15f)
         {
             Debug.Log("Indicator On");
             missileIndicatorGameObject.SetActive(true);
-            float targetY = transform.position.y;
-            float newY = Mathf.Lerp(missileIndicatorGameObject.transform.position.y, targetY, Time.deltaTime * 20f);
-            missileIndicatorGameObject.transform.position = new Vector2(missileIndicatorGameObject.transform.position.x, newY);
+            missileViewportPosition.x = 0.97f;
+            missileViewportPosition.y = Mathf.Clamp(missileViewportPosition.y, -3.4f, 4.5f);
+            Debug.Log("missile Y Pos :- " + missileViewportPosition.y);
+            Vector3 indicatorWorldPosition = camera.ViewportToWorldPoint(new Vector3(missileViewportPosition.x, missileViewportPosition.y, camera.nearClipPlane));
+            Debug.Log("worldPointPosition:- " + indicatorWorldPosition);
+            missileIndicatorGameObject.transform.position = indicatorWorldPosition;
         }
         else if (distanceToPlayer <= 15f)
         {
@@ -85,7 +97,8 @@ public class Missile : ObstacleSpawner
     {
         missileIndicatorGameObject = missileIndicator;
     }
+    public void SetCamera(Camera viewportCamera)
+    {
+        camera = viewportCamera;
+    }
 }
-
-
-
