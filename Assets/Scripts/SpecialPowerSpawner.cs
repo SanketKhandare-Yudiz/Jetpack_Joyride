@@ -5,7 +5,7 @@ public class SpecialPowerSpawner : SpawnManager
 {
     [SerializeField] private List<GameObject> superPowersPrefab;
     private float specialPowerDistance;
-    private float initialSPPosition = 200f;
+    private float initialSPPosition = 150f;
 
     public Transform player;
 
@@ -15,15 +15,12 @@ public class SpecialPowerSpawner : SpawnManager
     void Start()
     {
         nextSPPosition = initialSPPosition;
-        for (int i = 0; i < 2; i++)
-        {
-            SpwanSuperPower();
-        }
+        SpwanSuperPower();
     }
 
     void Update()
     {
-        if (player.transform.position.x > SpecialPower[1].transform.position.x)
+        if (player.transform.position.x > SpecialPower[0].transform.position.x)
         {
             RemoveSpecialPower();
             SpwanSuperPower();
@@ -46,11 +43,6 @@ public class SpecialPowerSpawner : SpawnManager
         GameObject specialpower = SpecialPower[0];
         SpecialPower.RemoveAt(0);
         Destroy(specialpower);
-    }
-
-    internal void Initialize(int spawnIndex, ObstacleSpawner obstacleSpawner)
-    {
-        throw new System.NotImplementedException();
     }
 }
 

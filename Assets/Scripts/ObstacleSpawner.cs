@@ -132,17 +132,16 @@ public class ObstacleSpawner : SpawnManager
         {
             SpawnZapper();
         }
-        SpawnZapper();
         SpawnMissile();
     }
 
     void Update()
     {
-        if (player.transform.position.x > zapperList[0].transform.position.x +20f && zapperList[0])
+        if (player.transform.position.x > zapperList[1].transform.position.x  && zapperList[0])
         {
             RemoveZapper();
             SpawnZapper();
-            Debug.Log("Spawn Zapper");
+            Debug.Log("Zapper Spawned");
         }
         if (player.transform.position.x > missileList[0].transform.position.x + 10f && missileList[0])
         {
@@ -158,13 +157,20 @@ public class ObstacleSpawner : SpawnManager
         GameObject randomPrefab = zapperPrefabs[randomIndex];
         int spawnPointIndex = Random.Range(0, obstacleSpawnPoints.Length);
         Transform spawnPoint = GetObstacleSpawnPoint(spawnPointIndex);
-
-
-        GameObject newObstacle = Instantiate(randomPrefab, spawnPoint.position, Quaternion.identity);
+        Debug.Log("spawnPoint:- " + spawnPoint.position);
+        Vector3 spawnPosition = new Vector3(nextZapperPosition, 0f, spawnPoint.position.z);
+        GameObject newObstacle = Instantiate(randomPrefab, spawnPosition, Quaternion.identity);
         zapperList.Add(newObstacle);
-        float obstacleDistance = Random.Range(10f, 13f); 
-        nextZapperPosition += 30f;
+
+        Transform childTransform = randomPrefab.transform.GetChild(0);
+        float childPos = childTransform.localPosition.x;
+        //int myInt = (int)childPos;
+        Debug.Log("child Pos :" + childPos);
+
+        float obstacleDistance = Random.Range(childPos +10f, childPos +15f);
+        nextZapperPosition += obstacleDistance;
     }
+
 
     private void RemoveZapper()
     {
@@ -180,9 +186,6 @@ public class ObstacleSpawner : SpawnManager
     {
         int spawnPointIndex = Random.Range(0, obstacleSpawnPoints.Length);
         Transform spawnPoint = GetObstacleSpawnPoint(spawnPointIndex);
-
-
-
         Vector3 spawnPosition = new Vector3(nextMissilePosition, spawnPoint.position.y, spawnPoint.position.z);
         Quaternion rotation = Quaternion.Euler(0, 0, 90);
         GameObject newMissile = Instantiate(missilePrefab, spawnPosition, rotation);

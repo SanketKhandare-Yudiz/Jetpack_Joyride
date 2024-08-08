@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class Shild : PlayerAbility
 {
-    private float movespeed = 5f;
-    private float jumpSpeed = 7f;
-    private Rigidbody2D player;
-    private Player playerScript;
+    [SerializeField] private float movespeed = 10f;
+    [SerializeField] private float jumpSpeed = 20f;
+    [SerializeField] private Rigidbody2D player;
+    [SerializeField] private Player playerScript;
+    [SerializeField] private float jetpackHoldTime = 0f;
 
     private void Start()
     {
@@ -13,7 +14,7 @@ public class Shild : PlayerAbility
         playerScript = GetComponent<Player>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         movment();
         ClampPlayer();
@@ -30,13 +31,16 @@ public class Shild : PlayerAbility
 
     public override void Jump()
     {
-        player.velocity = new Vector2(player.velocity.x, jumpSpeed);
+        player.gravityScale = 1.8f;
+        player.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Force);
+        AnimationController.instance.jumpAnimation();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         Zapper zapper = collision.transform.gameObject.GetComponent<Zapper>();
-        if(zapper != null)
+        Missile misile = collision.transform.GetComponent<Missile>();
+        if (zapper != null || misile != null)
         {
             playerScript.enabled = true;
             Destroy(gameObject);

@@ -17,4 +17,15 @@ public class ShildPrefab : MonoBehaviour
             addShildScript?.Invoke();
         }
     }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    Player player = collision.transform.gameObject.GetComponent<Player>();
+    //    if (player != null)
+    //    {
+    //        Destroy(gameObject);
+    //        Debug.Log("Collided");
+    //        addShildScript?.Invoke();
+    //    }
+    //}
 }

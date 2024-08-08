@@ -3,8 +3,8 @@ using UnityEngine;
 public class Player : PlayerActions
 {
     [SerializeField] private Rigidbody2D player;
-    [SerializeField] private float minThrustforce;
-    [SerializeField] private float maxThrustforce;
+    [SerializeField] private float minThrustforce = 60f;
+    [SerializeField] private float maxThrustforce = 75f;
     [SerializeField] private float moveSpeed;
     [SerializeField] private ParticleSystem jetPackflame;
     //private bool JetpackActive = false;

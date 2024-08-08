@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3984244131107541613}
   - component: {fileID: 3554903796143463198}
   - component: {fileID: 789996726008259275}
-  - component: {fileID: -5584458499601411489}
   m_Layer: 0
   m_Name: Zapper
   m_TagString: Obstacle
@@ -99,6 +98,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e0a285b6f674cb39feec23204f4a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleSpawnPoints: []
+  specialPowerSpawnPoints: []
+  zapperPrefabs: []
+  missilePrefab: {fileID: 0}
+  missileIndicator: {fileID: 0}
+  laserPrefab: {fileID: 0}
+  player: {fileID: 0}
+  mainCamera: {fileID: 0}
 --- !u!61 &789996726008259275
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -144,15 +151,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.39, y: 3.7}
   m_EdgeRadius: 0
---- !u!114 &-5584458499601411489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2799886413251638780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5e0a285b6f674cb39feec23204f4a5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
